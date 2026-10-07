@@ -1,0 +1,22 @@
+name: smoke
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Smoke test all subcommands
+        run: |
+          set -euo pipefail
+          python3 git_glimpse.py --help
+          python3 git_glimpse.py snapshot octocat/Hello-World > /dev/null
+          python3 git_glimpse.py stats octocat/Hello-World --format json > /dev/null
+          python3 git_glimpse.py compare octocat/Hello-World octocat/Spoon-Knife --format json > /dev/null
